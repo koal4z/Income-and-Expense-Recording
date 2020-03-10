@@ -26,6 +26,7 @@ export default function Expense(props) {
 
   const handleDone = () => {
     setEdit(false);
+    
     if (changeData.remark !== "" && changeData.amount !== "") {
       setKeepdata([...keepdata, changeData]);
     }
