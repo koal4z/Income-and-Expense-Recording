@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Detail from "./Detail";
 import axios from "axios";
+const id = JSON.parse(localStorage.getItem("id"));
 
 let noRepeatDate = [];
+
 export default function Seemore() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    const url =
-      "https://assignment-api.dev.witsawa.com/transactions?user=5c39f8e9d7f40f00a448a97e";
+    const url = `http://localhost:5000/transactions?user=${id}`;
     axios
       .get(url)
       .then(result => setData(result.data))
@@ -16,8 +17,17 @@ export default function Seemore() {
   }, []);
 
   const clearDuplicate = arr => {
-    const allDate = arr.map((item, idx) => item.date);
-    noRepeatDate = []
+    const clearDate = d => {
+      return d
+        .substring(0, 10)
+        .replace(/-/g, "/")
+        .split("/")
+        .reverse()
+        .join("/");
+    };
+    const allDate = arr.map((item, idx) => clearDate(item.date));
+
+    noRepeatDate = [];
     noRepeatDate.push(allDate[0]);
     for (let i = 1; i < allDate.length; i++) {
       if (noRepeatDate.indexOf(allDate[i]) === -1) {

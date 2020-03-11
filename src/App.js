@@ -6,7 +6,6 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import Top from "./components/Top";
 import Main from "./components/Main";
-// eslint-disable-next-line
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 function App() {
   const matches = useMediaQuery("(min-width:800px)");

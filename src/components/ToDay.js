@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Income from "./Income";
@@ -6,25 +6,76 @@ import Expense from "./Expense";
 import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 import moment from "moment";
-const date = moment().format("L");
+import axios from "axios";
 
+const momentDate = moment()
+  .format("L")
+  .split(/\//);
+const date = [momentDate[1], momentDate[0], momentDate[2]].join("/");
 export default function ToDay() {
   const [addExpense, setAddExpense] = useState([]);
   const [addIncome, setAddIncome] = useState([]);
   const [data, setData] = useState({ remark: "", amount: "" });
 
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [e, setE] = useState([]);
+  const [i, setI] = useState([]);
+
+  useEffect(() => {
+    axios.get(`http://localhost:5000/switchUser/?user=${user}`).then(result => {
+      const id = result.data[0]._id;
+      localStorage.setItem("id", JSON.stringify(id));
+      axios
+        .get(`http://localhost:5000/transactions/?user=${id}`)
+        .then(result => {
+          setE(() => result.data.filter(item => item.type === "expense"));
+          setI(() => result.data.filter(item => item.type === "income"));
+        })
+        .catch(err => console.log(err));
+    });
+  }, []);
+  const id = JSON.parse(localStorage.getItem("id"));
+
   const handleAddExpense = () => {
     setAddExpense([...addExpense, data]);
+    axios
+      .post("http://localhost:5000/transactions", {
+        user: id,
+        amount: "",
+        type: "expense",
+        remark: ""
+      })
+      .then(result => console.log(result))
+      .catch(err => console.log(err));
   };
   const handleAddIncome = () => {
     setAddIncome([...addIncome, data]);
+    axios
+      .post("http://localhost:5000/transactions", {
+        user: id,
+        amount: "",
+        type: "income",
+        remark: ""
+      })
+      .then(result => console.log(result))
+      .catch(err => console.log(err));
   };
   const onDeleteExpense = id => {
     setAddExpense(addExpense.filter((item, idx) => id !== idx));
+    const idDelete = e[e.length - 1]._id;
+    axios
+      .delete(`http://localhost:5000/transactions/${idDelete}`)
+      .then(r => console.log(r))
+      .catch(err => console.log(err));
   };
 
   const onDeleteIncome = id => {
     setAddIncome(addIncome.filter((item, idx) => id !== idx));
+    const idDelete = i[i.length - 1]._id;
+    axios
+      .delete(`http://localhost:5000/transactions/${idDelete}`)
+      .then(r => console.log(r))
+      .catch(err => console.log(err));
   };
 
   return (
@@ -64,6 +115,7 @@ export default function ToDay() {
                 setData={setData}
                 addExpense={addIncome}
                 setAddExpense={setAddIncome}
+                i={i}
               />
             ))}
           </div>
@@ -107,6 +159,7 @@ export default function ToDay() {
                 setData={setData}
                 addExpense={addExpense}
                 setAddExpense={setAddExpense}
+                e={e}
               />
             ))}
             <div

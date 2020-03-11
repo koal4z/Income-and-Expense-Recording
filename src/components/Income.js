@@ -8,24 +8,34 @@ import DoneIcon from "@material-ui/icons/Done";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-
+import axios from "axios";
 export default function Income(props) {
   const [edit, setEdit] = useState(false);
   const [changeData, setChangeData] = useState(props.data);
-
+  console.log(changeData);
   const handleChange = e => {
     let name = e.target.name;
     let value = e.target.value;
     setChangeData({ ...changeData, [name]: value });
   };
-
+  // console.log(props.i)
   const handleEdit = () => {
     edit ? setEdit(false) : setEdit(true);
   };
 
   const handleDone = () => {
     setEdit(false);
-
+    const idExp = props.idExp;
+    const lineI = props.i.length - 1;
+    const selectId = props.i[idExp + lineI]._id;
+    axios
+      .put(`http://localhost:5000/transactions/${selectId}`, {
+        remark: changeData.remark,
+        amount: changeData.amount,
+        type:"income"
+      })
+      .then(r => console.log(r))
+      .catch(err => console.log(err));
   };
 
   return (

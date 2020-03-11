@@ -8,10 +8,10 @@ const transactionRoute = require("./route/transaction");
 const passport = require("passport");
 const cors = require("cors");
 const app = express();
+app.use(express.static('public'))
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(bodyParser.json());
 
 app.use(
@@ -31,7 +31,6 @@ mongoose.connect("mongodb://localhost:27017/recordingDB", {
   useFindAndModify: false,
   useCreateIndex: true
 });
-
 
 app.use("/", userRoute);
 app.use("/", transactionRoute);
