@@ -5,6 +5,8 @@ import Seemore from "./Seemore";
 import ToDay from "./ToDay";
 export default function Daily() {
   const [tab, setTab] = useState({ tab1: true, tab2: false });
+  const user = JSON.parse(localStorage.getItem("user"));
+  
   const handleTab = e => {
     const name = e.target.id;
     if (name === "tab1") {
@@ -63,7 +65,7 @@ export default function Daily() {
               height: "100%"
             }}
           >
-            username : Kongpob
+            username : {user}
           </h3>
         </Col>
       </Row>

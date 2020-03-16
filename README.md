@@ -1,7 +1,3 @@
-
-
-
-
 ### Front -> http://localhost:3000/ 
 react
 npm start

@@ -1,10 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-
+import axios from "axios";
+import { useHistory } from "react-router-dom";
 export default function Signup() {
+  const [username, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const history = useHistory();
+  const handleSignup = (e) => {
+    e.preventDefault();
+    axios
+      .post("http://localhost:5000/users", {
+        username: username,
+        password: password
+      })
+      .then(result => {
+        console.log(result);
+        if (result.data === "create complete") {
+          history.push("/");
+        } else {
+          alert(result.data);
+        }
+      })
+      .catch(err => console.log(err));
+  };
+
   return (
     <div
       style={{
@@ -33,6 +55,8 @@ export default function Signup() {
             label="Username"
             variant="outlined"
             size="small"
+            onChange={e => setUserName(e.target.value)}
+            value={username}
           />
 
           <TextField
@@ -42,6 +66,9 @@ export default function Signup() {
             label="Password"
             variant="outlined"
             size="small"
+            type="password"
+            onChange={e => setPassword(e.target.value)}
+            value={password}
           />
 
           <Row style={{ padding: "0", margin: "1.5% 0" }}>
@@ -52,7 +79,12 @@ export default function Signup() {
               }}
             >
               <div style={{ width: "50%", margin: "0 auto" }}>
-                <Button fullWidth variant="contained" color="secondary">
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleSignup}
+                >
                   Create Account
                 </Button>
               </div>

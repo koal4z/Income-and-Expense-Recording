@@ -36,7 +36,7 @@ export default function Income(props) {
               {data.map((item, idx) => {
                 return (
                   <li key={idx}>
-                    {item.amount === "" ? "No Remark" : item.amount}
+                    {item.amount === null ? "--------" : item.amount}
                   </li>
                 );
               })}

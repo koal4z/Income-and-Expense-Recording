@@ -1,12 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"; 
-
+import axios from "axios";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 export default function Login() {
+  const [username, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+
+  const history = useHistory();
+  const handleLogin = e => {
+    e.preventDefault();
+    axios
+      .post("http://localhost:5000/users/login", {
+        username: username,
+        password: password
+      })
+      .then(result => {
+        console.log(result);
+        if (result.status === 200) {
+          if (result.data === "login") {
+            localStorage.setItem("user", JSON.stringify(username));
+            alert("login");
+            history.push("/");
+          } else {
+            alert(result.data);
+          }
+        }
+      })
+      .catch(err => console.log(err));
+  };
   return (
     <div
       style={{
@@ -35,17 +60,23 @@ export default function Login() {
             label="Username"
             variant="outlined"
             size="small"
+            onChange={e => setUserName(e.target.value)}
+            name="username"
+            value={username}
           />
 
           <TextField
             style={{ margin: "2% 0" }}
             fullWidth
+            type="password"
             id="outlined"
             label="Password"
             variant="outlined"
             size="small"
+            onChange={e => setPassword(e.target.value)}
+            name="password"
+            value={password}
           />
-
           <Row style={{ padding: "0", margin: "1.5% 0" }}>
             <Col style={{ width: "100%", padding: "0 1.2% 0 0" }}>
               <Link style={{ textDecoration: "none" }} to="/signup">
@@ -66,7 +97,12 @@ export default function Login() {
                 padding: "0 0 0 1.2%"
               }}
             >
-              <Button fullWidth variant="contained" color="secondary">
+              <Button
+                fullWidth
+                variant="contained"
+                color="secondary"
+                onClick={handleLogin}
+              >
                 Login
               </Button>
             </Col>

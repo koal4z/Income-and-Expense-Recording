@@ -6,22 +6,27 @@ import Col from "react-bootstrap/Col";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 
-export default function Detail(props) {
-  const data = props.data;
-  const date = props.date;
-
-  const selectData = data.map(item => {
-    if (item.date === date) {
-      return item;
-    }
-  });
-
-  const arrangeDate = date
-    .substring(0, 9)
+const clearDate = d => {
+  return d
+    .substring(0, 10)
     .replace(/-/g, "/")
     .split("/")
     .reverse()
     .join("/");
+};
+
+export default function Detail(props) {
+  const data = props.data
+  const date = props.date;
+  const selectData = []
+
+  const setData = data.forEach(item => {
+    if (clearDate(item.date) === date) {
+      selectData.push(item)
+    }
+  });
+
+
   const [showDetail, setShowDetail] = useState(false);
   const handleDetail = () => {
     showDetail ? setShowDetail(false) : setShowDetail(true);
@@ -46,7 +51,7 @@ export default function Detail(props) {
           }}
         >
           <h3 style={{ margin: "0 3%", color: "#FFFFFF", lineHeight: "45px" }}>
-            day : {arrangeDate}
+            day : {date}
           </h3>
           <div style={{ marginRight: "2%" }}>
             <IconButton onClick={handleDetail} aria-label="down">
@@ -91,7 +96,6 @@ export default function Detail(props) {
               <IncomeMemo
                 data={selectData.filter(item => item.type === "expense")}
               />
-              
             </div>
           </Col>
         </Row>

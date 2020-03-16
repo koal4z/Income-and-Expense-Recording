@@ -3,7 +3,7 @@ import Login from "./Login";
 import Signup from "./Signup";
 import Daily from "./Daily";
 
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"; 
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 function Main() {
   return (
     <section style={{ height: "100%" }}>
